@@ -1,21 +1,52 @@
-version: '3'
+version: '3.8'
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
+  nginx:
+    image: nginx:1.21.5-alpine
+    container_name: symfony_shop-nginx
+    restart: unless-stopped
+    volumes:
+      - ./shop:/var/www/html
+      - ./shop/docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
+      - db
+    ports:
+      - "8080:80"
+  php-fpm:
+    container_name: symfony_shop-php
+    build:
+      context: ./shop/docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./shop:/var/www/html
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+  #  php-cli:
+  #    build:
+  #      context: ./docker
+  #      dockerfile: php-cli.docker
+  #    volumes:
+  #      - ./:/app
+  #      - composer:/root/.composer/cache
+  #    depends_on:
+  #      - db
+
+  db:
+    container_name: symfony_shop-db
+    image: postgres:13.5-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
-      POSTGRES_USER: ${POSTGRES_USER:-symfony}
+      POSTGRES_DB: shop
+      POSTGRES_PASSWORD: shop
+      POSTGRES_USER: root
     volumes:
       - db-data:/var/lib/postgresql/data:rw
+    ports:
+      - "54321:5432"
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
 
 volumes:
-###> doctrine/doctrine-bundle ###
   db-data:
-###< doctrine/doctrine-bundle ###

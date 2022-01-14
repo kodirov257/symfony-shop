@@ -1,4 +1,6 @@
-.idea
+
+  
+../.idea
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -16,3 +18,7 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
