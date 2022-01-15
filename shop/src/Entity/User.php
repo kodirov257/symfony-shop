@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -9,9 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`user`')]
 class User
 {
-    public const STATUS_WAIT = 'wait';
-    public const STATUS_ACTIVE = 'active';
-    public const STATUS_BLOCKED = 'blocked';
+    public const STATUS_WAIT = 1;
+    public const STATUS_ACTIVE = 5;
+    public const STATUS_BLOCKED = 6;
 
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
